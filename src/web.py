@@ -11,14 +11,17 @@ import time
 class MainHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
-        i = 0
-        while True:
-            self.write("Hello world! counter: %d<br />\n" % i)
-            self.flush()
-            i += 1
-#            tornado.ioloop.IOLoop.instance().add_timeout(time.time() + 1)
-            time.sleep(1)
+        self.infinite_loop(0)
+        
+    def infinite_loop(self, counter):
+        self.write("Hello world! counter: %d<br />\n" % counter)
+        self.flush()
+        tornado.ioloop.IOLoop.instance().add_timeout(time.time() + 1,
+                                                     lambda: self.infinite_loop(counter + 1))
+    
+    def on_connection_close(self):
         self.finish()
+    
 
 application = tornado.web.Application([
     (r"/", MainHandler),
