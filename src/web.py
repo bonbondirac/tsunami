@@ -20,9 +20,10 @@ class MainHandler(tornado.web.RequestHandler):
         if cls.cache:
             self.write('interrupted on %s<br />\n' % cls.cache)
             cls.cache = None
-        self.write("Hello world! counter: %d<br />\n" % counter)
+        if counter % 50 ==  0:
+            self.write("Hello world! counter: %d<br />\n" % (counter / 50))
         self.flush()
-        tornado.ioloop.IOLoop.instance().add_timeout(time.time() + 1,
+        tornado.ioloop.IOLoop.instance().add_timeout(time.time() + 0.1,
                                                      lambda: self.infinite_loop(counter + 1))
 
 
@@ -31,6 +32,7 @@ class InterruptHandler(tornado.web.RequestHandler):
     def get(self):
         cls = MainHandler
         cls.cache = str(time.time())
+        self.write('inserted interrupt on %s' % cls.cache)
         
 
 application = tornado.web.Application([
