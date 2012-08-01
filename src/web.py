@@ -8,6 +8,7 @@ import tornado.ioloop
 import tornado.web
 import time
 
+
 class MainHandler(tornado.web.RequestHandler):
     cache = None
     
@@ -21,7 +22,7 @@ class MainHandler(tornado.web.RequestHandler):
             self.write('interrupted on %s<br />\n' % cls.cache)
             cls.cache = None
         if counter % 50 ==  0:
-            self.write("Hello world! counter: %d<br />\n" % (counter / 50))
+            self.write("keep alive! counter: %d<br />\n" % (counter / 50))
         self.flush()
         tornado.ioloop.IOLoop.instance().add_timeout(time.time() + 0.1,
                                                      lambda: self.infinite_loop(counter + 1))
