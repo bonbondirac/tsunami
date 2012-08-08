@@ -10,12 +10,13 @@ import constants
 import listener
 import settings
 import threading
+import redis
 
 class Streamer(threading.Thread):
     
-    def __init__(self, redis_ins):
+    def __init__(self, redis_connection_pool):
         super(Streamer, self).__init__()
-        self.redis_ins = redis_ins
+        self.redis_ins = redis.StrictRedis(connection_pool=redis_connection_pool)
         self.ps = self.redis_ins.pubsub()
         self.listeners = listener.Listener()
     

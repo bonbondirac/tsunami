@@ -65,8 +65,8 @@ class StreamHandler(BaseHandler):
 
 
 def main():
-    redis_ins = redis.StrictRedis()
-    streamer_ins = streamer.Streamer(redis_ins)
+    redis_connection_pool = redis.ConnectionPool()
+    streamer_ins = streamer.Streamer(redis_connection_pool)
     streamer_ins.start()
     
     application = tornado.web.Application([
