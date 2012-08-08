@@ -14,9 +14,9 @@ import redis
 
 class Streamer(threading.Thread):
     
-    def __init__(self, redis_connection_pool):
+    def __init__(self):
         super(Streamer, self).__init__()
-        self.redis_ins = redis.StrictRedis(connection_pool=redis_connection_pool)
+        self.redis_ins = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
         self.ps = self.redis_ins.pubsub()
         self.listeners = listener.Listener()
     

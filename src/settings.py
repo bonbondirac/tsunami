@@ -19,3 +19,7 @@ elif hostname in ('tc_69_53', 'tc_6_173', 'tc_6_175'):
     ENV_TAG = 'test'
 else:
     ENV_TAG = 'prod'
+    
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 0
