@@ -42,8 +42,7 @@ class Listener(object):
         channel_listeners = self.listeners.get(channel, set())
         
         return channel_listeners
-        
-        
+
 
 class Streamer(threading.Thread):
     
@@ -64,7 +63,6 @@ class Streamer(threading.Thread):
         self.ps.subscribe(channel)
         
         return None
-
     
     def remove_listener(self, listener):
         channel = self._get_channel(listener)
@@ -74,15 +72,13 @@ class Streamer(threading.Thread):
         
         return None
 
-
     def run(self):
-        pass
         while True:
-            time.sleep(1)
-#            for received_msg in self.ps.listen():
-#                if received_msg['type'] == 'message':
-#                    print received_msg
-#                    self._write_stream(received_msg)
+#            time.sleep(10)
+            for received_msg in self.ps.listen():
+                print received_msg
+                if received_msg['type'] == 'message':
+                    self._write_stream(received_msg)
     
     def _write_stream(self, received_msg):
         channel = received_msg['channel']
@@ -95,8 +91,7 @@ class Streamer(threading.Thread):
 class BaseHandler(tornado.web.RequestHandler):
     
     def get_current_user(self):
-#        return self.get_argument('user', None)
-        return None
+        return self.get_argument('user', None)
 
 
 class MainHandler(BaseHandler):
@@ -115,14 +110,13 @@ class StreamHandler(BaseHandler):
     
     @tornado.web.asynchronous
     def get(self):
-        print 'get connection'
-        self._keep_alive_loop()
-#        user = self.get_current_user()
-#        if user:
-#            self.streamer.add_listener(self)
-#            self._keep_alive_loop()
-#        else:
-#            self.finish()
+        user = self.get_current_user()
+        print 'get connection %s' % user
+        if user:
+            self.streamer.add_listener(self)
+            self._keep_alive_loop()
+        else:
+            self.finish()
         
         return None
     
@@ -131,10 +125,10 @@ class StreamHandler(BaseHandler):
             self.write(constants.BREAK_SYMBOL)
             self.flush()
             tornado.ioloop.IOLoop.instance() \
-                   .add_timeout(time.time() + constants.KEEP_ALIVE_INTERVAL, lambda: self._keep_alive_loop())
+                   .add_timeout(time.time() + constants.KEEP_ALIVE_INTERVAL,
+                                lambda: self._keep_alive_loop())
         
         return None
-        
     
     def on_connection_close(self):
         print 'close connection'
