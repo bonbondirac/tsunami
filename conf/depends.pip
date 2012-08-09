@@ -1,7 +1,7 @@
-anyjson
-simplejson
-hiredis
-redis
-requests
-tornado
-mysql-python
+MySQL-python==1.2.3
+anyjson==0.3.3
+hiredis==0.1.1
+redis==2.6.0
+requests==0.13.6
+simplejson==2.6.1
+tornado==2.3
