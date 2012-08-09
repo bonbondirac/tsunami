@@ -19,7 +19,27 @@ elif hostname in ('tc_69_53', 'tc_6_173', 'tc_6_175'):
     ENV_TAG = 'test'
 else:
     ENV_TAG = 'prod'
+
+if ENV_TAG in ('local', 'home'):
+    REDIS_HOST = 'localhost'
+    REDIS_PORT = 6379
+    REDIS_DB = 0
     
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
-REDIS_DB = 0
+    MYSQL_HOST = '127.0.0.1'
+    MYSQL_PORT = 3306
+    MYSQL_USER = 'sohukan'
+    MYSQL_PASSWD = 'sohukan'
+    MYSQL_DB = 'sohupocketlib'
+    
+
+if ENV_TAG in ('test',):
+    REDIS_HOST = '10.10.69.53'
+    REDIS_PORT = 6379
+    REDIS_DB = 0
+    
+    MYSQL_HOST = '10.10.69.53'
+    MYSQL_PORT = 3306
+    MYSQL_USER = 'sohukan'
+    MYSQL_PASSWD = 'sohukan'
+    MYSQL_DB = 'sohupocketlibtest'
+    

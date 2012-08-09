@@ -8,15 +8,20 @@ Created on 2012-8-7
 
 import constants
 import streamer
+import auth
 import time
 import tornado.ioloop
 import tornado.web
+import tornado.database
+import settings
 
 
 class BaseHandler(tornado.web.RequestHandler):
     
     def get_current_user(self):
-        return self.get_argument('user', None)
+        if not hasattr(self, 'user'):
+            self.user = auth.User(self.db, self.get_cookie('access_token', ''))
+        return self.user
 
 
 class MainHandler(BaseHandler):
@@ -27,8 +32,9 @@ class MainHandler(BaseHandler):
 
 class StreamHandler(BaseHandler):
     
-    def initialize(self, streamer):
+    def initialize(self, db, streamer):
         self.streamer = streamer
+        self.db = db
         self._stop_signal = False
         
         return None
@@ -36,8 +42,8 @@ class StreamHandler(BaseHandler):
     @tornado.web.asynchronous
     def get(self):
         user = self.get_current_user()
-        print 'get connection %s' % user
-        if user:
+        print 'get connection, user: %s' % user.get_user_id()
+        if user.get_user:
             self.streamer.add_listener(self)
             self._keep_alive_loop()
         else:
@@ -67,9 +73,16 @@ def main():
     streamer_ins = streamer.Streamer()
     streamer_ins.start()
     
+    db = tornado.database.Connection(
+                                     host='%s:%s' % (settings.MYSQL_HOST, settings.MYSQL_PORT),
+                                     database=settings.MYSQL_DB,
+                                     user=settings.MYSQL_USER,
+                                     password=settings.MYSQL_PASSWD,
+                                     )
+    
     application = tornado.web.Application([
         (r"/", MainHandler),
-        (r"/stream", StreamHandler, dict(streamer=streamer_ins)),
+        (r"/api/2/sync/stream/?", StreamHandler, dict(db=db, streamer=streamer_ins)),
         ])
     
     application.listen(8888)
