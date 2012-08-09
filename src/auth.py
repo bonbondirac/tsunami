@@ -8,7 +8,6 @@ class User(object):
     
     def __init__(self, db, access_token):
         self.db = db
-        access_token = '19a77650b9b829caa401ed219726410277928eac'
         self.access_token = access_token
     
     def get_user(self):
