@@ -22,7 +22,7 @@ class Listener(object):
     def remove_listener(self, channel, listener):
         channel_listeners = self.get_channel_listeners(channel)
         channel_listeners.discard(listener)
-        if channel_listeners:
+        if not channel_listeners:
             # provide a default value to prevent KeyError
             self.listeners.pop(channel, None)
         else:

@@ -34,8 +34,9 @@ class Streamer(threading.Thread):
         
     def add_listener(self, listener):
         channel =  self._get_channel(listener)
-        self.listeners.add_listener(channel, listener)
-        self.ps.subscribe(channel)
+        count = self.listeners.add_listener(channel, listener)
+        if count == 1:
+            self.ps.subscribe(channel)
         
         return None
     
