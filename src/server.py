@@ -42,7 +42,7 @@ class StreamHandler(BaseHandler):
     @tornado.web.asynchronous
     def get(self):
         user = self.get_current_user()
-        print 'get connection, user: %s' % user.get_user_id()
+        print 'get connection from user: %s' % user.get_user_id()
         if user.get_user():
             self.streamer.add_listener(self)
             self._keep_alive_loop()

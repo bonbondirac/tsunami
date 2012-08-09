@@ -9,3 +9,10 @@ KEY_USER_CHANNEL = 'user.channel:%s-%s' # require env_tag, user_id
 BREAK_SYMBOL = '\r\n'
 KEEP_ALIVE_INTERVAL = 60
 DEFAULT_CHANNEL = 'default.channel'
+
+msg_config = {
+              'sync': {
+                       'type': 'command',
+                       'message': 'sync',
+                       }
+              }

@@ -52,27 +52,28 @@ class Streamer(threading.Thread):
         for received_msg in self.ps.listen():
             print received_msg
             if received_msg['type'] == 'message':
-                self._write_stream(received_msg)
-    
-    def _write_stream(self, received_msg):
+                self._write_streams(received_msg)
+
+    def _write_streams(self, received_msg):
         channel = received_msg['channel']
         channel_listeners = self.listeners.get_channel_listeners(channel)
-        for listener in channel_listeners:
-            listener.write(self._explain(received_msg['data']))
-            listener.write(constants.BREAK_SYMBOL)
-            listener.flush()
-            
-    def _explain(self, msg):
-        msg_config = {
-                      'sync': {
-                               'type': 'command',
-                               'message': 'sync',
-                               }
-                      }
-        if msg in msg_config.keys():
-            new_msg = msg_config[msg]
-        else:
-            new_msg = {}
+        for channel_listener in channel_listeners:
+            try:
+                self._write_one_stream(channel_listener, received_msg)
+            except:
+                pass
+        
+        return None
+    
+    def _write_one_stream(self, channel_listener, received_msg):
+        channel_listener.write(self._serialize_msg(received_msg['data']))
+        channel_listener.write(constants.BREAK_SYMBOL)
+        channel_listener.flush()
+        
+        return None
+    
+    def _serialize_msg(self, short_msg):
+        new_msg = constants.msg_config.get(short_msg, dict())
         new_msg = anyjson.dumps(new_msg)
         
         return new_msg
