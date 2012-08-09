@@ -7,7 +7,6 @@ Created on 2012-8-7
 '''
 
 import constants
-import redis
 import streamer
 import time
 import tornado.ioloop

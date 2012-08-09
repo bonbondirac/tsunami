@@ -18,6 +18,8 @@ class Streamer(threading.Thread):
         super(Streamer, self).__init__()
         self.redis_ins = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
         self.ps = self.redis_ins.pubsub()
+        # establish connection first to prevent multi-threading issue
+        self.ps.subscribe(constants.DEFAULT_CHANNEL)
         self.listeners = listener.Listener()
     
     def _get_channel(self, listener):
@@ -41,11 +43,10 @@ class Streamer(threading.Thread):
         return None
 
     def run(self):
-        while True:
-            for received_msg in self.ps.listen():
-                print received_msg
-                if received_msg['type'] == 'message':
-                    self._write_stream(received_msg)
+        for received_msg in self.ps.listen():
+            print received_msg
+            if received_msg['type'] == 'message':
+                self._write_stream(received_msg)
     
     def _write_stream(self, received_msg):
         channel = received_msg['channel']
