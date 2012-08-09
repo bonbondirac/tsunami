@@ -4,3 +4,4 @@ hiredis
 redis
 requests
 tornado
+mysql-python
