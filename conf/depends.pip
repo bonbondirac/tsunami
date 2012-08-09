@@ -1,0 +1,6 @@
+anyjson
+simplejson
+hiredis
+redis
+requests
+tornado
