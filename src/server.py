@@ -41,6 +41,7 @@ class StreamHandler(BaseHandler):
     
     @tornado.web.asynchronous
     def get(self):
+        self.set_header('Content-Type', 'application/json')
         user = self.get_current_user()
         print 'get connection from user: %s' % user.get_user_id()
         if user.get_user():
@@ -62,7 +63,7 @@ class StreamHandler(BaseHandler):
         return None
     
     def on_connection_close(self):
-        print 'close connection'
+        print 'close connection from user: %s' % self.get_current_user().get_user_id()
         self.streamer.remove_listener(self)
         self._stop_signal = True
         
