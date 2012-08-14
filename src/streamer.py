@@ -12,6 +12,11 @@ import settings
 import threading
 import redis
 import anyjson
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+logger = logging.getLogger(__name__)
 
 class Streamer(threading.Thread):
     
@@ -50,7 +55,7 @@ class Streamer(threading.Thread):
 
     def run(self):
         for received_msg in self.ps.listen():
-            print received_msg
+            logger.info('broadcasting: %s' % received_msg)
             if received_msg['type'] == 'message':
                 self._write_streams(received_msg)
 

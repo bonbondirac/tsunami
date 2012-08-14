@@ -14,6 +14,9 @@ import tornado.ioloop
 import tornado.web
 import tornado.database
 import settings
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -43,7 +46,7 @@ class StreamHandler(BaseHandler):
     def get(self):
         self.set_header('Content-Type', 'application/json')
         user = self.get_current_user()
-        print 'get connection from user: %s' % user.get_user_id()
+        logger.info('get connection from user: %s' % user.get_user_id())
         if user.get_user():
             self.streamer.add_listener(self)
             self._keep_alive_loop()
@@ -63,7 +66,7 @@ class StreamHandler(BaseHandler):
         return None
     
     def on_connection_close(self):
-        print 'close connection from user: %s' % self.get_current_user().get_user_id()
+        logger.info('close connection from user: %s' % self.get_current_user().get_user_id())
         self.streamer.remove_listener(self)
         self._stop_signal = True
         
