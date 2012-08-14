@@ -42,6 +42,7 @@ class StreamHandler(BaseHandler):
         
         return None
     
+    @tornado.web.addslash
     @tornado.web.asynchronous
     def get(self):
         self.set_header('Content-Type', 'application/json')
