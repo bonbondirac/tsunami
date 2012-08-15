@@ -12,8 +12,8 @@ class User(object):
     
     def get_user(self):
         if not hasattr(self, '_user'):
-            qs = "select * from account_access where access_token = '%s'" % self.access_token
-            result = self.db.get(qs)
+            qs = "select * from account_access where access_token = %s"
+            result = self.db.get(qs, self.access_token)
             if result:
                 self._user = result
             else:

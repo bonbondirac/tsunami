@@ -16,6 +16,6 @@ def call_stream_api(url, access_token):
     
     
 if __name__ == '__main__':
-    access_token = '9920e647907355f3756dad8b1477da4bcc6850fe'
-    url = 'http://test.kan.sohu.com/api/2/sync/stream'
+    access_token = '19a77650b9b829caa401ed219726410277928eac'
+    url = 'http://localhost:8888/api/2/sync/stream/'
     call_stream_api(url, access_token)
