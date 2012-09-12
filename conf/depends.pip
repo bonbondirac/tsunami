@@ -4,4 +4,4 @@ hiredis==0.1.1
 redis==2.6.0
 requests==0.13.6
 simplejson==2.6.1
-tornado==2.3
+tornado==2.4
