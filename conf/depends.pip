@@ -5,3 +5,4 @@ redis==2.6.0
 requests==0.13.6
 simplejson==2.6.1
 tornado==2.4
+supervisor==3.0b1
