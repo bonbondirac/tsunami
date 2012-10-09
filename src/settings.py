@@ -30,7 +30,6 @@ if ENV_TAG in ('local', 'home'):
     MYSQL_USER = 'sohukan'
     MYSQL_PASSWD = 'sohukan'
     MYSQL_DB = 'sohupocketlib'
-    
 
 if ENV_TAG in ('test',):
     REDIS_HOST = '10.10.69.53'
@@ -42,4 +41,14 @@ if ENV_TAG in ('test',):
     MYSQL_USER = 'sohukan'
     MYSQL_PASSWD = 'sohukan'
     MYSQL_DB = 'sohupocketlibtest'
+
+if ENV_TAG in ('prod',):
+    REDIS_HOST = '10.10.124.177'
+    REDIS_PORT = 6379
+    REDIS_DB = 0
     
+    MYSQL_HOST = '10.10.58.17'
+    MYSQL_PORT = 3306
+    MYSQL_USER = 'sohupocketlib'
+    MYSQL_PASSWD = 'SejJGGk2'
+    MYSQL_DB = 'sohupocketlib'
