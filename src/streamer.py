@@ -10,7 +10,6 @@ import constants
 import listener
 import settings
 import threading
-import redis
 import anyjson
 import logging
 
@@ -20,12 +19,9 @@ logger = logging.getLogger(__name__)
 
 class Streamer(threading.Thread):
     
-    def __init__(self):
+    def __init__(self, redis_ins):
         super(Streamer, self).__init__()
-        # due to multi-threading issue, we use brand new connection here
-        self.redis_ins = redis.StrictRedis(host=settings.REDIS_HOST,
-                                           port=settings.REDIS_PORT,
-                                           db=settings.REDIS_DB)
+        self.redis_ins = redis_ins
         self.ps = self.redis_ins.pubsub()
         # establish connection first to prevent multi-threading issue
         self.ps.subscribe(constants.DEFAULT_CHANNEL)

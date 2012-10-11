@@ -30,6 +30,7 @@ if ENV_TAG in ('local', 'home'):
     MYSQL_USER = 'sohukan'
     MYSQL_PASSWD = 'sohukan'
     MYSQL_DB = 'sohupocketlib'
+    MYSQL_MAX_IDLE_TIME = 7 * 3600
 
 if ENV_TAG in ('test',):
     REDIS_HOST = '10.10.69.53'
@@ -41,6 +42,7 @@ if ENV_TAG in ('test',):
     MYSQL_USER = 'sohukan'
     MYSQL_PASSWD = 'sohukan'
     MYSQL_DB = 'sohupocketlibtest'
+    MYSQL_MAX_IDLE_TIME = 7 * 3600
 
 if ENV_TAG in ('prod',):
     REDIS_HOST = '10.10.124.177'
@@ -52,3 +54,4 @@ if ENV_TAG in ('prod',):
     MYSQL_USER = 'sohupocketlib'
     MYSQL_PASSWD = 'SejJGGk2'
     MYSQL_DB = 'sohupocketlib'
+    MYSQL_MAX_IDLE_TIME = 20 * 60

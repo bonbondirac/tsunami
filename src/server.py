@@ -10,6 +10,7 @@ import constants
 import streamer
 import auth
 import time
+import redis
 import tornado.ioloop
 import tornado.web
 import tornado.database
@@ -23,7 +24,7 @@ class BaseHandler(tornado.web.RequestHandler):
     
     def get_current_user(self):
         if not hasattr(self, 'user'):
-            self.user = auth.User(self.db, self.get_cookie('access_token', ''))
+            self.user = auth.User(self.db, self.redis_ins, self.get_cookie('access_token', ''))
         return self.user
 
 
@@ -35,9 +36,10 @@ class MainHandler(BaseHandler):
 
 class StreamHandler(BaseHandler):
     
-    def initialize(self, db, streamer):
+    def initialize(self, db, streamer, redis_ins):
         self.streamer = streamer
         self.db = db
+        self.redis_ins = redis_ins
         self._stop_signal = False
         
         return None
@@ -60,9 +62,9 @@ class StreamHandler(BaseHandler):
         if not self._stop_signal:
             self.write(constants.BREAK_SYMBOL)
             self.flush()
-            tornado.ioloop.IOLoop.instance() \
-                   .add_timeout(time.time() + constants.KEEP_ALIVE_INTERVAL,
-                                lambda: self._keep_alive_loop())
+            tornado.ioloop.IOLoop.instance().add_timeout(
+                time.time() + constants.KEEP_ALIVE_INTERVAL, lambda: self._keep_alive_loop()
+            )
         
         return None
     
@@ -75,21 +77,28 @@ class StreamHandler(BaseHandler):
 
 
 def main():
-    streamer_ins = streamer.Streamer()
-    streamer_ins.start()
-    
     db = tornado.database.Connection(
-                                     host='%s:%s' % (settings.MYSQL_HOST, settings.MYSQL_PORT),
-                                     database=settings.MYSQL_DB,
-                                     user=settings.MYSQL_USER,
-                                     password=settings.MYSQL_PASSWD,
-                                     )
+        host='%s:%s' % (settings.MYSQL_HOST, settings.MYSQL_PORT),
+        database=settings.MYSQL_DB,
+        user=settings.MYSQL_USER,
+        password=settings.MYSQL_PASSWD,
+        max_idle_time=settings.MYSQL_MAX_IDLE_TIME,
+    )
+    
+    redis_ins = redis.StrictRedis(
+        host=settings.REDIS_HOST,
+        port=settings.REDIS_PORT,
+        db=settings.REDIS_DB
+    )
+    
+    streamer_ins = streamer.Streamer(redis_ins)
     
     application = tornado.web.Application([
         (r"/", MainHandler),
-        (r"/api/2/sync/stream/?", StreamHandler, dict(db=db, streamer=streamer_ins)),
+        (r"/api/2/sync/stream/?", StreamHandler, dict(db=db, streamer=streamer_ins, redis_ins=redis_ins)),
         ])
     
+    streamer_ins.start()
     application.listen(8888)
     tornado.ioloop.IOLoop.instance().start()
 
