@@ -14,6 +14,7 @@ import redis
 import tornado.ioloop
 import tornado.web
 import tornado.database
+import tornado.options
 import settings
 import logging
 
@@ -76,6 +77,13 @@ class StreamHandler(BaseHandler):
         return None
 
 
+def command_line_options():
+    tornado.options.define("port", default=8888, help="run on the given port", type=int)
+    tornado.options.parse_command_line()
+    
+    return tornado.options.options
+
+
 def main():
     db = tornado.database.Connection(
         host='%s:%s' % (settings.MYSQL_HOST, settings.MYSQL_PORT),
@@ -92,14 +100,15 @@ def main():
     )
     
     streamer_ins = streamer.Streamer(redis_ins)
+    streamer_ins.start()
     
     application = tornado.web.Application([
         (r"/", MainHandler),
         (r"/api/2/sync/stream/?", StreamHandler, dict(db=db, streamer=streamer_ins, redis_ins=redis_ins)),
         ])
     
-    streamer_ins.start()
-    application.listen(8888)
+    options = command_line_options()
+    application.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
 
 
