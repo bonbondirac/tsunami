@@ -17,19 +17,22 @@ class User(object):
     
     def get_user(self):
         if not hasattr(self, '_user'):
-            key = constants.KEY_ACCESS_TOKEN_CACHE % (settings.ENV_TAG, self.access_token)
-            result = self.redis_ins.get(key)
-            if result is not None:
-                row = cPickle.loads(result)
+            if self.access_token:
+                key = constants.KEY_ACCESS_TOKEN_CACHE % (settings.ENV_TAG, self.access_token)
+                result = self.redis_ins.get(key)
+                if result is not None:
+                    row = cPickle.loads(result)
+                else:
+                    row = None
+                if row is None:
+                    qs = "select * from account_access where access_token = %s"
+                    row = self.db.get(qs, self.access_token)
+                    if row:
+                        self.redis_ins.set(key, cPickle.dumps(row))
+                        self.redis_ins.expire(key, constants.ACCESS_TOKEN_CACHE_TIMEOUT)
+                self._user = row
             else:
-                row = None
-            if row is None:
-                qs = "select * from account_access where access_token = %s"
-                row = self.db.get(qs, self.access_token)
-                if row:
-                    self.redis_ins.set(key, cPickle.dumps(row))
-                    self.redis_ins.expire(key, constants.ACCESS_TOKEN_CACHE_TIMEOUT)
-            self._user = row
+                self._user = None
         
         return self._user
     
