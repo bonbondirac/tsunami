@@ -50,7 +50,7 @@ class StreamHandler(BaseHandler):
     def get(self):
         self.set_header('Content-Type', 'application/json')
         user = self.get_current_user()
-        logger.info('get connection from user: %s on connection %s' % (user.get_user_id(), id(self)))
+        logger.info('get connection: %s from user: %s' % (id(self), user.get_user_id()))
         if user.get_user():
             self.streamer.add_listener(self)
             self._keep_alive_loop()
@@ -70,7 +70,7 @@ class StreamHandler(BaseHandler):
         return None
     
     def on_connection_close(self):
-        logger.info('close connection from user: %s on connection %s' % (self.get_current_user().get_user_id(), id(self)))
+        logger.info('close connection: %s from user: %s' % (id(self), self.get_current_user().get_user_id()))
         self.streamer.remove_listener(self)
         self._stop_signal = True
         
