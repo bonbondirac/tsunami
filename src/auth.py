@@ -7,6 +7,11 @@ Created on 2012-8-9
 import cPickle
 import settings
 import constants
+import time
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class User(object):
     
@@ -26,7 +31,11 @@ class User(object):
                     row = None
                 if row is None:
                     qs = "select * from account_access where access_token = %s"
-                    row = self.db.get(qs, self.access_token)
+                    try:
+                        row = self.db.get(qs, self.access_token)
+                    except Exception, exc:
+                        logger.warning('idle time: %s' % (time.time() - self.db._last_use_time))
+                        raise exc
                     if row:
                         self.redis_ins.set(key, cPickle.dumps(row))
                         self.redis_ins.expire(key, constants.ACCESS_TOKEN_CACHE_TIMEOUT)
