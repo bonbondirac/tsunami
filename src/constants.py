@@ -7,6 +7,8 @@ Created on 2012-8-8
 '''
 KEY_USER_CHANNEL = 'user.channel:%s-%s' # require env_tag, user_id
 KEY_ACCESS_TOKEN_CACHE = 'cache:access.token:%s-%s' # require env_tag, access_token
+KEY_CONNECTIONS_COUNT = 'count:connections:tsunami:%s' # require env_tag
+KEY_TSUNAMI_WORKER_ID = '%s.%s' # require hostname, port
 
 BREAK_SYMBOL = '\r\n'
 

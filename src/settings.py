@@ -5,6 +5,8 @@ Created on 2012-8-8
 
 @author: diracfang
 '''
+
+import tornado.options
 import socket
 
 hostname = socket.gethostname()
@@ -55,3 +57,12 @@ if ENV_TAG in ('prod',):
     MYSQL_PASSWD = 'SejJGGk2'
     MYSQL_DB = 'sohupocketlib'
     MYSQL_MAX_IDLE_TIME = 20 * 60
+
+
+def command_line_options():
+    tornado.options.define("port", default=8888, help="run on the given port", type=int)
+    tornado.options.parse_command_line()
+    
+    return tornado.options.options
+
+COMMAND_LINE_OPTIONS = command_line_options()

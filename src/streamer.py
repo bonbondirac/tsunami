@@ -25,7 +25,7 @@ class Streamer(threading.Thread):
         self.ps = self.redis_ins.pubsub()
         # establish connection first to prevent multi-threading issue
         self.ps.subscribe(constants.DEFAULT_CHANNEL)
-        self.listeners = listener.Listener()
+        self.listeners = listener.Listener(redis_ins)
     
     def _get_channel(self, listener):
         channel = constants.KEY_USER_CHANNEL % (settings.ENV_TAG,
@@ -78,3 +78,4 @@ class Streamer(threading.Thread):
         new_msg = anyjson.dumps(new_msg)
         
         return new_msg
+    
