@@ -50,10 +50,15 @@ class Streamer(threading.Thread):
         return None
 
     def run(self):
-        for received_msg in self.ps.listen():
-            logger.info('broadcasting: %s' % received_msg)
-            if received_msg['type'] == 'message':
-                self._write_streams(received_msg)
+#        keep trying when redis connection problem happens
+        while True:
+            try:
+                for received_msg in self.ps.listen():
+                    logger.info('broadcasting: %s' % received_msg)
+                    if received_msg['type'] == 'message':
+                        self._write_streams(received_msg)
+            except:
+                pass
 
     def _write_streams(self, received_msg):
         channel = received_msg['channel']
