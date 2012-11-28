@@ -35,8 +35,8 @@ if ENV_TAG in ('local', 'home'):
     MYSQL_MAX_IDLE_TIME = 7 * 3600
 
 if ENV_TAG in ('test',):
-    REDIS_HOST = '10.10.69.53'
-    REDIS_PORT = 6379
+    REDIS_HOST = '10.11.6.175'
+    REDIS_PORT = 6380
     REDIS_DB = 0
     
     MYSQL_HOST = '10.10.69.53'

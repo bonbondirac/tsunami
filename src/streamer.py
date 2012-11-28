@@ -12,6 +12,7 @@ import settings
 import threading
 import anyjson
 import logging
+import time
 
 logging.basicConfig(level=logging.INFO)
 
@@ -58,7 +59,9 @@ class Streamer(threading.Thread):
                     if received_msg['type'] == 'message':
                         self._write_streams(received_msg)
             except:
-                pass
+#                use another connection, existing subscribes are lost
+                self.ps = self.redis_ins.pubsub()
+                time.sleep(1)
 
     def _write_streams(self, received_msg):
         channel = received_msg['channel']
