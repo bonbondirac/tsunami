@@ -51,7 +51,7 @@ class Streamer(threading.Thread):
         return None
 
     def run(self):
-#        keep trying when redis connection problem happens
+#        keep trying when redis connection encounters problem
         while True:
             try:
                 for received_msg in self.ps.listen():
@@ -61,6 +61,11 @@ class Streamer(threading.Thread):
             except:
 #                use another connection, existing subscribes are lost
                 self.ps = self.redis_ins.pubsub()
+                try:
+                    self.ps.subscribe(constants.DEFAULT_CHANNEL)
+                except:
+#                    this connection may still not be consistent, waiting for fix in the next round
+                    pass
                 time.sleep(1)
 
     def _write_streams(self, received_msg):
