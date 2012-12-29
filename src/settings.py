@@ -47,7 +47,7 @@ if ENV_TAG in ('test',):
     MYSQL_MAX_IDLE_TIME = 7 * 3600
 
 if ENV_TAG in ('prod',):
-    REDIS_HOST = '10.10.124.177'
+    REDIS_HOST = '10.10.124.156'
     REDIS_PORT = 6379
     REDIS_DB = 0
     

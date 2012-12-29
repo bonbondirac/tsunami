@@ -3,6 +3,4 @@ encoding//src/constants.py=utf-8
 encoding//src/listener.py=utf-8
 encoding//src/server.py=utf-8
 encoding//src/settings.py=utf-8
-encoding//src/settings_master.py=utf-8
-encoding//src/settings_resque.py=utf-8
 encoding//src/streamer.py=utf-8
