@@ -56,7 +56,7 @@ if ENV_TAG in ('prod',):
     MYSQL_USER = 'sohupocketlib'
     MYSQL_PASSWD = 'SejJGGk2'
     MYSQL_DB = 'sohupocketlib'
-    MYSQL_MAX_IDLE_TIME = 20 * 60
+    MYSQL_MAX_IDLE_TIME = 1 * 60
 
 
 def command_line_options():
